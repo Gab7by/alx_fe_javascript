@@ -8,7 +8,7 @@ const quoteDisplay = document.getElementById("quoteDisplay");
 const quoteCategory = document.getElementById("quoteCategory");
 const categoryFilter = document.getElementById("categoryFilter");
 
-// --- Initialize Application ---
+// --- Initialize the App ---
 document.addEventListener("DOMContentLoaded", () => {
   createAddQuoteForm();
   populateCategories();
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 });
 
-// --- Save quotes to Local Storage ---
+// --- Save Quotes to Local Storage ---
 function saveQuotes() {
   localStorage.setItem("quotes", JSON.stringify(quotes));
 }
@@ -48,16 +48,30 @@ function showRandomQuote() {
   sessionStorage.setItem("lastViewedQuote", JSON.stringify(randomQuote));
 }
 
-// --- Create Add Quote Form ---
+// --- Create Add Quote Form (using DOM methods) ---
 function createAddQuoteForm() {
   const formContainer = document.getElementById("addQuoteForm");
 
-  formContainer.innerHTML = `
-    <h3>Add a New Quote</h3>
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button onclick="addQuote()">Add Quote</button>
-  `;
+  const title = document.createElement("h3");
+  title.textContent = "Add a New Quote";
+  formContainer.appendChild(title);
+
+  const quoteInput = document.createElement("input");
+  quoteInput.id = "newQuoteText";
+  quoteInput.type = "text";
+  quoteInput.placeholder = "Enter a new quote";
+  formContainer.appendChild(quoteInput);
+
+  const categoryInput = document.createElement("input");
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.type = "text";
+  categoryInput.placeholder = "Enter quote category";
+  formContainer.appendChild(categoryInput);
+
+  const addButton = document.createElement("button");
+  addButton.textContent = "Add Quote";
+  addButton.addEventListener("click", addQuote);
+  formContainer.appendChild(addButton);
 }
 
 // --- Add a New Quote ---
@@ -72,20 +86,26 @@ function addQuote() {
 
   quotes.push({ text, category });
   saveQuotes();
-
-  // Update DOM
   populateCategories();
+
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
   alert("Quote added successfully!");
 }
 
-// --- Populate Categories ---
+// --- Populate Category Dropdown ---
 function populateCategories() {
   const uniqueCategories = ["all", ...new Set(quotes.map(q => q.category))];
-  categoryFilter.innerHTML = uniqueCategories
-    .map(cat => `<option value="${cat}">${cat}</option>`)
-    .join("");
+  
+  // Clear existing options
+  categoryFilter.innerHTML = "";
+
+  uniqueCategories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categoryFilter.appendChild(option);
+  });
 
   const lastCategory = localStorage.getItem("selectedCategory");
   if (lastCategory && uniqueCategories.includes(lastCategory)) {
