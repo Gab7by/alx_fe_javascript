@@ -1,68 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dynamic Quote Generator</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dynamic Quote Generator (with Storage & JSON)</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-      background: #f9f9f9;
-    }
-
-    h1 {
-      color: #333;
-    }
-
-    #quoteDisplay {
-      margin: 20px auto;
-      padding: 20px;
-      width: 60%;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      font-size: 1.2em;
-    }
-
-    select, input, button {
-      padding: 8px;
-      margin: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-
-    button {
-      cursor: pointer;
-      background-color: #007bff;
-      color: white;
-      border: none;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
+    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background:#f9f9f9; }
+    #quoteDisplay { margin:20px auto; padding:20px; width:60%; background:#fff; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.08); font-size:1.2em; min-height:80px; }
+    select, input, button { padding:8px; margin:5px; border-radius:5px; border:1px solid #ccc; }
+    button { cursor:pointer; background:#007bff; color:white; border:none; }
+    button:hover{ background:#0056b3; }
+    #addQuoteContainer { margin-top:18px; }
+    #controls { margin-top: 12px; }
+    #message { margin-top:12px; color:#064; font-weight:600; }
+    #error { margin-top:12px; color:#a00; font-weight:600; }
+    small { color:#666; display:block; margin-top:6px; }
   </style>
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
 
-  <!-- Category Selection -->
   <div>
     <select id="categorySelect"></select>
     <button id="newQuote">Show New Quote</button>
   </div>
 
-  <!-- Quote Display Area -->
   <div id="quoteDisplay">Click "Show New Quote" to begin!</div>
 
-  <!-- Add New Quote Section -->
-  <div>
-    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-    <button id="addQuoteBtn">Add Quote</button>
+  <!-- actions: export/import/clear -->
+  <div id="controls">
+    <button id="exportBtn">Export Quotes (JSON)</button>
+    <label style="display:inline-block; margin-left:8px;">
+      <input type="file" id="importFile" accept=".json" style="display:none" />
+      <button id="importBtn">Import Quotes (JSON)</button>
+    </label>
+    <button id="clearStorageBtn" title="Clear saved quotes">Clear Saved Quotes</button>
   </div>
+  <small>Session stores your last viewed quote. Local storage persists quotes across browser sessions.</small>
+
+  <div id="addQuoteContainer"></div>
+
+  <div id="message" aria-live="polite"></div>
+  <div id="error" aria-live="assertive"></div>
 
   <script src="script.js"></script>
 </body>
