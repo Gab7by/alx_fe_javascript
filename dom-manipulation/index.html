@@ -1,47 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dynamic Quote Generator (with Storage & JSON)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Quote Generator</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background:#f9f9f9; }
-    #quoteDisplay { margin:20px auto; padding:20px; width:60%; background:#fff; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.08); font-size:1.2em; min-height:80px; }
-    select, input, button { padding:8px; margin:5px; border-radius:5px; border:1px solid #ccc; }
-    button { cursor:pointer; background:#007bff; color:white; border:none; }
-    button:hover{ background:#0056b3; }
-    #addQuoteContainer { margin-top:18px; }
-    #controls { margin-top: 12px; }
-    #message { margin-top:12px; color:#064; font-weight:600; }
-    #error { margin-top:12px; color:#a00; font-weight:600; }
-    small { color:#666; display:block; margin-top:6px; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    #quoteDisplay {
+      margin-top: 20px;
+      font-size: 1.3em;
+      font-style: italic;
+    }
+    #quoteCategory {
+      color: gray;
+      font-size: 0.9em;
+    }
+    select, input, button {
+      margin: 5px 0;
+      padding: 5px;
+    }
   </style>
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
 
+  <!-- Category Filter -->
+  <label for="categoryFilter">Filter by Category:</label>
+  <select id="categoryFilter" onchange="filterQuotes()">
+    <option value="all">All Categories</option>
+  </select>
+
+  <div id="quoteDisplay"></div>
+  <p id="quoteCategory"></p>
+
+  <button id="newQuote">Show New Quote</button>
+
+  <!-- Add new quote form -->
+  <div id="addQuoteForm"></div>
+
+  <!-- JSON Import/Export -->
   <div>
-    <select id="categorySelect"></select>
-    <button id="newQuote">Show New Quote</button>
+    <button onclick="exportToJsonFile()">Export Quotes</button>
+    <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
   </div>
-
-  <div id="quoteDisplay">Click "Show New Quote" to begin!</div>
-
-  <!-- actions: export/import/clear -->
-  <div id="controls">
-    <button id="exportBtn">Export Quotes (JSON)</button>
-    <label style="display:inline-block; margin-left:8px;">
-      <input type="file" id="importFile" accept=".json" style="display:none" />
-      <button id="importBtn">Import Quotes (JSON)</button>
-    </label>
-    <button id="clearStorageBtn" title="Clear saved quotes">Clear Saved Quotes</button>
-  </div>
-  <small>Session stores your last viewed quote. Local storage persists quotes across browser sessions.</small>
-
-  <div id="addQuoteContainer"></div>
-
-  <div id="message" aria-live="polite"></div>
-  <div id="error" aria-live="assertive"></div>
 
   <script src="script.js"></script>
 </body>
