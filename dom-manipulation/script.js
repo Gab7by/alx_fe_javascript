@@ -10,7 +10,29 @@ let quotes = JSON.parse(localStorage.getItem('quotes')) || [
   { text: "Stay hungry, stay foolish.", category: "Life" }
 ];
 
-// Display quotes
+// === RANDOM QUOTE FUNCTIONALITY ===
+function showRandomQuote() {
+  if (quotes.length === 0) {
+    quoteDisplay.innerHTML = "No quotes available.";
+    alert("⚠️ No quotes available!");
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const randomQuote = quotes[randomIndex];
+
+  quoteDisplay.innerHTML = `
+    <div class="quote">
+      "${randomQuote.text}" — (${randomQuote.category})
+    </div>
+  `;
+
+  // Store last viewed quote using session storage
+  sessionStorage.setItem('lastViewedQuote', JSON.stringify(randomQuote));
+  alert(`✨ Random Quote: "${randomQuote.text}"`);
+}
+
+// Display all quotes (filtered or full)
 function displayQuotes(filteredQuotes = quotes) {
   quoteDisplay.innerHTML = "";
   filteredQuotes.forEach((quote) => {
@@ -49,8 +71,7 @@ function filterQuotes() {
       ? quotes
       : quotes.filter(q => q.category === selectedCategory);
   displayQuotes(filteredQuotes);
-
-  alert(`Filter applied: ${selectedCategory}`); // 🔔 Alert when filter changes
+  alert(`🔍 Filter applied: ${selectedCategory}`);
 }
 
 // Add new quote
@@ -65,11 +86,11 @@ addQuoteForm.addEventListener('submit', (e) => {
     localStorage.setItem('quotes', JSON.stringify(quotes));
     populateCategories();
     filterQuotes();
-    syncQuotesToServer(); // sync new quote to server
+    syncQuotesToServer(); // Sync new quote to server
     addQuoteForm.reset();
 
     showNotification("✅ Quote added and synced with server!");
-    alert("✅ Quote added successfully and synced with the server!"); // 🔔 Alert when quote is added
+    alert("✅ Quote added successfully and synced with the server!");
   }
 });
 
@@ -99,7 +120,7 @@ async function fetchQuotesFromServer() {
       category: "Server Sync"
     }));
 
-    // Conflict resolution (server takes precedence)
+    // Conflict resolution: Server takes precedence
     const mergedQuotes = [...quotes, ...serverQuotes];
     const uniqueQuotes = Array.from(new Set(mergedQuotes.map(q => q.text)))
       .map(text => mergedQuotes.find(q => q.text === text));
@@ -110,10 +131,10 @@ async function fetchQuotesFromServer() {
     filterQuotes();
 
     showNotification("🔄 Quotes synced with server!");
-    alert("🔄 Quotes have been synced with the server!"); // 🔔 Alert when sync occurs
+    alert("🔄 Quotes have been synced with the server!");
   } catch (error) {
     console.error("Error fetching from server:", error);
-    alert("⚠️ Failed to fetch quotes from the server."); // 🔔 Alert on fetch error
+    alert("⚠️ Failed to fetch quotes from the server.");
   }
 }
 
@@ -130,21 +151,27 @@ async function syncQuotesToServer() {
 
     if (response.ok) {
       console.log("Quotes synced to server successfully!");
-      alert("✅ Quotes synced to server successfully!"); // 🔔 Alert on successful sync
+      alert("✅ Quotes synced to server successfully!");
     } else {
       console.error("Failed to sync quotes to server!");
-      alert("⚠️ Failed to sync quotes to server!"); // 🔔 Alert on failed sync
+      alert("⚠️ Failed to sync quotes to server!");
     }
   } catch (error) {
     console.error("Error syncing to server:", error);
-    alert("⚠️ Network error: Could not sync quotes to server."); // 🔔 Alert on error
+    alert("⚠️ Network error: Could not sync quotes to server.");
   }
 }
 
-// Periodically sync every 30 seconds
+// Periodic sync every 30 seconds
 setInterval(fetchQuotesFromServer, 30000);
 
 // Initialize
 populateCategories();
 filterQuotes();
 displayQuotes();
+
+// Restore last viewed quote (optional)
+const lastViewed = JSON.parse(sessionStorage.getItem('lastViewedQuote'));
+if (lastViewed) {
+  alert(`👀 Last viewed quote: "${lastViewed.text}"`);
+}
