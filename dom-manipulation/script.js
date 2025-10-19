@@ -49,6 +49,8 @@ function filterQuotes() {
       ? quotes
       : quotes.filter(q => q.category === selectedCategory);
   displayQuotes(filteredQuotes);
+
+  alert(`Filter applied: ${selectedCategory}`); // 🔔 Alert when filter changes
 }
 
 // Add new quote
@@ -65,7 +67,9 @@ addQuoteForm.addEventListener('submit', (e) => {
     filterQuotes();
     syncQuotesToServer(); // sync new quote to server
     addQuoteForm.reset();
+
     showNotification("✅ Quote added and synced with server!");
+    alert("✅ Quote added successfully and synced with the server!"); // 🔔 Alert when quote is added
   }
 });
 
@@ -106,8 +110,10 @@ async function fetchQuotesFromServer() {
     filterQuotes();
 
     showNotification("🔄 Quotes synced with server!");
+    alert("🔄 Quotes have been synced with the server!"); // 🔔 Alert when sync occurs
   } catch (error) {
     console.error("Error fetching from server:", error);
+    alert("⚠️ Failed to fetch quotes from the server."); // 🔔 Alert on fetch error
   }
 }
 
@@ -124,11 +130,14 @@ async function syncQuotesToServer() {
 
     if (response.ok) {
       console.log("Quotes synced to server successfully!");
+      alert("✅ Quotes synced to server successfully!"); // 🔔 Alert on successful sync
     } else {
       console.error("Failed to sync quotes to server!");
+      alert("⚠️ Failed to sync quotes to server!"); // 🔔 Alert on failed sync
     }
   } catch (error) {
     console.error("Error syncing to server:", error);
+    alert("⚠️ Network error: Could not sync quotes to server."); // 🔔 Alert on error
   }
 }
 
